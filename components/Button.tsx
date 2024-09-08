@@ -7,6 +7,9 @@ type ButtonProp = {
     pillShape?: boolean
 } 
 
+let name:string = "deepak"
+let ages: number[] = [1,2,23,4]
+
 const Button = ({backgroundColor, textColor} : ButtonProp) => {
 
   
