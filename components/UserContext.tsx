@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useContext, createContext } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 
 interface Props{
     children: React.ReactNode
@@ -19,7 +19,7 @@ interface Address{
     geo: Geo | null
 }
 
-interface User{
+export interface User{
     id: number
     name: string
     username: string
@@ -32,14 +32,45 @@ interface UserContextValues{
     addUser: (user: User) => void
 }
 
-const UserContextApi = createContext<UserContextValues | undefined>(undefined)
+const UserContextInitial: UserContextValues = {
+    user: null,
+    addUser: ()=> {},
+}
+
+export const UserContextApi = createContext<UserContextValues>(UserContextInitial)
 
 
 const UserContext = ({children}: Props) => {
+
+    const [user, setUser] = useState<User[] | null>(null)
+
+    const addUser = (newUser: User)=>{
+        setUser((prevUser)=> (prevUser ? [...prevUser, newUser] : [newUser]))
+    }
+
+    const fetchUser = async()=>{
+        try {
+             const response = await fetch('https://jsonplaceholder.typicode.com/users')
+                if(!response.ok){
+                    throw new Error("Failed to fetch data")
+                }else{
+                    const data: User[] = await response.json()
+                    setUser(data)
+                }
+        } catch (error) {
+                console.log("Failed to run the function")
+        }
+       
+    }
+
+    useEffect(()=>{
+        fetchUser()
+    },[])
+
   return (
-    <div>
-      
-    </div>
+    <UserContextApi.Provider value={{user, addUser}}>
+        {children}
+    </UserContextApi.Provider>
   )
 }
 
