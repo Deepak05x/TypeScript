@@ -6,15 +6,9 @@ import { UserContextApi } from './UserContext'
 import {User as UserType} from './UserContext'
 
 
-
-
-
 const User = () => {
 
     const {user, addUser} = useContext(UserContextApi)
-
-
-    console.log(user)
 
   return (
     <div className='flex flex-col items-center w-full py-24 '>
